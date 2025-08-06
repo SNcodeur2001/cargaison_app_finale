@@ -1,0 +1,15 @@
+{
+    "name": "mapathe/cargaison",
+    "description": "projet typescript php",
+    "autoload": {
+        "psr-4": {
+            "Mapathe\\Cargaison\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "mapathe"
+        }
+    ],
+    "require": {}
+}

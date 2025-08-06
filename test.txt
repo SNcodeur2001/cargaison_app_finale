@@ -1,0 +1,38 @@
+gestion-cargaison/
+│
+├── public/                      # Dossier accessible au navigateur
+│   ├── index.php                # Point d'entrée PHP
+│   ├── assets/                  # Images, logo, CSS
+│   ├── js/                      # Code JS généré depuis TS
+│   └── views/                   # Templates PHP
+│       ├── home.php
+│       ├── cargaisons.php
+│       ├── clients.php
+│       └── suivi.php
+│
+├── src/
+│   ├── ts/                      # Code TypeScript métier
+│   │   ├── models/
+│   │   │   ├── Cargaison.ts
+│   │   │   ├── Aerienne.ts
+│   │   │   ├── Maritime.ts
+│   │   │   ├── Routiere.ts
+│   │   │   ├── Produit.ts
+│   │   │   ├── Alimentaire.ts
+│   │   │   ├── Chimique.ts
+│   │   │   ├── Materiel.ts
+│   │   │   ├── Fragile.ts
+│   │   │   └── Incassable.ts
+│   │   ├── services/
+│   │   │   ├── CargaisonService.ts
+│   │   │   └── ProduitService.ts
+│   │   └── test.ts              # Fichier de test pour exécution Node
+│   │
+│   └── php/
+│       ├── Router.php           # Router PHP simple
+│       └── functions.php        # Fonctions utilitaires
+│
+├── composer.json                # Si besoin de libs PHP
+├── package.json                 # Pour TypeScript et Webpack
+├── tsconfig.json                # Config TypeScript
+└── .htaccess                    # Redirection vers index.php (si Apache)
