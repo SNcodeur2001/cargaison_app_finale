@@ -1,0 +1,146 @@
+/* public/assets/css/style.css - CSS de secours si Tailwind CDN ne charge pas */
+
+/* Reset de base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+}
+
+/* Classes de base similaires à Tailwind */
+.min-h-screen { min-height: 100vh; }
+.flex { display: flex; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.text-center { text-align: center; }
+.block { display: block; }
+.hidden { display: none; }
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+
+/* Padding et margins */
+.p-4 { padding: 1rem; }
+.p-6 { padding: 1.5rem; }
+.p-8 { padding: 2rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+.py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mb-8 { margin-bottom: 2rem; }
+.mb-12 { margin-bottom: 3rem; }
+.mt-8 { margin-top: 2rem; }
+.mt-16 { margin-top: 4rem; }
+.ml-2 { margin-left: 0.5rem; }
+.mr-2 { margin-right: 0.5rem; }
+
+/* Tailles */
+.w-full { width: 100%; }
+.w-12 { width: 3rem; }
+.w-20 { width: 5rem; }
+.w-24 { width: 6rem; }
+.h-1 { height: 0.25rem; }
+.h-12 { height: 3rem; }
+.h-20 { height: 5rem; }
+.max-w-4xl { max-width: 56rem; }
+.max-w-6xl { max-width: 72rem; }
+
+/* Grilles */
+.grid { display: grid; }
+.gap-6 { gap: 1.5rem; }
+.gap-8 { gap: 2rem; }
+
+@media (min-width: 768px) {
+    .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* Couleurs et backgrounds */
+.bg-gradient-to-br {
+    background: linear-gradient(to bottom right, #0f172a, #1e3a8a, #1e293b);
+}
+
+.text-white { color: white; }
+.text-gray-300 { color: #d1d5db; }
+.text-gray-400 { color: #9ca3af; }
+.text-blue-400 { color: #60a5fa; }
+.text-purple-400 { color: #a78bfa; }
+
+.bg-white\/10 { background-color: rgba(255, 255, 255, 0.1); }
+.bg-white\/15 { background-color: rgba(255, 255, 255, 0.15); }
+.bg-blue-500\/20 { background-color: rgba(59, 130, 246, 0.2); }
+
+.border { border-width: 1px; }
+.border-white\/20 { border-color: rgba(255, 255, 255, 0.2); }
+
+/* Bordures arrondies */
+.rounded-lg { border-radius: 0.5rem; }
+.rounded-2xl { border-radius: 1rem; }
+.rounded-full { border-radius: 9999px; }
+
+/* Typographie */
+.text-sm { font-size: 0.875rem; }
+.text-xl { font-size: 1.25rem; }
+.text-2xl { font-size: 1.5rem; }
+.text-5xl { font-size: 3rem; }
+.text-6xl { font-size: 3.75rem; }
+
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+
+.tracking-tight { letter-spacing: -0.025em; }
+
+/* Transitions et animations */
+.transition-all { transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
+.transition-transform { transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
+.duration-300 { transition-duration: 0.3s; }
+
+.hover\:scale-105:hover { transform: scale(1.05); }
+.hover\:bg-white\/15:hover { background-color: rgba(255, 255, 255, 0.15); }
+.hover\:text-blue-300:hover { color: #93c5fd; }
+.hover\:text-purple-300:hover { color: #c4b5fd; }
+
+.group:hover .group-hover\:scale-110 { transform: scale(1.1); }
+.group:hover .group-hover\:translate-x-1 { transform: translateX(0.25rem); }
+.group:hover .group-hover\:text-blue-300 { color: #93c5fd; }
+.group:hover .group-hover\:text-purple-300 { color: #c4b5fd; }
+
+/* Flexbox utilities */
+.inline-flex { display: inline-flex; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+
+/* Backdrop blur simulation (fallback) */
+.backdrop-blur-lg {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+/* Si backdrop-filter n'est pas supporté */
+@supports not (backdrop-filter: blur(16px)) {
+    .backdrop-blur-lg {
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+}
+
+/* Animation keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}

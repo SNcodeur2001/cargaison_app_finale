@@ -200,6 +200,37 @@ function getStatusInfo(status) {
             label: 'Arrivé',
             description: 'Votre colis est arrivé à destination',
             icon: 'fa-check-circle',
+            bgColor: 'bg-green-500/20',
+            textColor: 'text-green-400'
+        },
+        'RECUPERE': {
+            label: 'Récupéré',
+            description: 'Votre colis a été récupéré par le destinataire',
+            icon: 'fa-check-double',
+            bgColor: 'bg-green-500/20',
+            textColor: 'text-green-400'
+        },
+        'PERDU': {
+            label: 'Problème',
+            description: 'Un problème est survenu avec votre colis',
+            icon: 'fa-exclamation-triangle',
+            bgColor: 'bg-red-500/20',
+            textColor: 'text-red-400'
         }
-    }
+    };
+    
+    return statusMap[status] || statusMap['EN_ATTENTE'];
 }
+
+// Fonction de formatage de date (fallback si pas dans app.js)
+if (typeof formatDate === 'undefined') {
+    window.formatDate = function(dateString) {
+        const options = { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        };
+        return new Date(dateString).toLocaleDateString('fr-FR', options);
+    };
+}
+</script>
