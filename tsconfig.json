@@ -47,7 +47,7 @@
 
   "compilerOptions": {
     "rootDir": "./src",
-    "outDir": "./dist",
+    "outDir": "public/assets/js",
 
     // Environnement navigateur (pas Node)
     "module": "ES2020",

@@ -34,7 +34,7 @@ export class Colis {
     this.dateEnregistrement = new Date();
     this.etat = EtatColis.EN_ATTENTE;
     this.prix = this.calculerPrix();
-    this.cargaison = cargaison; // affectée plus tard
+    this.cargaison = cargaison; 
   }
 
   private calculerPrix(): number {

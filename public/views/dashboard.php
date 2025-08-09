@@ -1,8 +1,4 @@
 <?php
-// public/views/dashboard.php
-// Protection de la page (à décommenter quand les sessions sont configurées)
-// require_once __DIR__ . '/../../src/php/functions.php';
-// requireLogin();
 
 $title = "Dashboard - GPduMonde";
 $bodyClass = "bg-gray-50";
@@ -289,35 +285,201 @@ $bodyClass = "bg-gray-50";
                 </button>
             </div>
         </div>
-        <form class="p-6 space-y-4" onsubmit="handleCreateCargaison(event)">
+        <form id="createCargaisonForm" class="p-6 space-y-4" onsubmit="handleCreateCargaison(event)">
+            <!-- Numéro de cargaison (auto) -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Numéro de cargaison</label>
+                <input type="text" id="numero" readonly
+                    class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
+                    placeholder="Généré automatiquement">
+            </div>
+
+            <!-- Type + Poids max -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Type de cargaison</label>
-                    <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option>Maritime</option>
-                        <option>Aérien</option>
-                        <option>Routier</option>
+                    <select id="type" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                        <option value="Maritime">Maritime</option>
+                        <option value="Aérienne">Aérienne</option>
+                        <option value="Routière">Routière</option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Poids maximum (kg)</label>
-                    <input type="number" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="1000">
+                    <input type="number" id="poidsMax" min="1" required
+                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="1000">
                 </div>
             </div>
+
+            <!-- Lieux -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Lieu de départ</label>
-                    <input type="text" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Ville de départ">
+                    <input type="text" id="lieuDepart" required
+                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Ville ou coordonnées GPS">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Lieu d'arrivée</label>
-                    <input type="text" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Ville d'arrivée">
+                    <input type="text" id="lieuArrivee" required
+                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Ville ou coordonnées GPS">
                 </div>
             </div>
+
+            <!-- Distance -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Distance (km)</label>
-                <input type="number" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="2500">
+                <input type="number" id="distance" readonly
+                    class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
+                    placeholder="Calculée automatiquement">
             </div>
+
+            <!-- Prix total -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Prix total (FCFA)</label>
+                <input type="number" id="prixTotal" readonly
+                    class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
+                    placeholder="0">
+            </div>
+
+            <!-- État d’avancement et état global -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">État d’avancement</label>
+                    <select id="etatAvancement" required
+                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="En attente">En attente</option>
+                        <option value="En cours">En cours</option>
+                        <option value="Livrée">Livrée</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">État global</label>
+                    <select id="etatGlobal" required
+                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="Ouverte">Ouverte</option>
+                        <option value="Fermée">Fermée</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Date estimée d'arrivée -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Date estimée d'arrivée</label>
+                <input type="date" id="dateArrivee"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <!-- Liste des produits -->
+            <div class="border-t pt-4">
+                <h3 class="text-lg font-semibold mb-2">Produits</h3>
+
+                <!-- Formulaire d'ajout de produit -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nom du produit</label>
+                        <input type="text" id="produitNom"
+                            class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Nom">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Poids (kg)</label>
+                        <input type="number" id="produitPoids" min="0" step="0.01"
+                            class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Poids">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Quantité</label>
+                        <input type="number" id="produitQuantite" min="1"
+                            class="w-full p-3 border border-gray-300 rounded-lg" placeholder="1">
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <button type="button" onclick="ajouterProduit()"
+                        class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
+                        Ajouter produit
+                    </button>
+                </div>
+
+                <!-- Tableau des produits ajoutés -->
+                <table class="w-full mt-4 border border-gray-300 text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="border px-2 py-1">Nom</th>
+                            <th class="border px-2 py-1">Poids</th>
+                            <th class="border px-2 py-1">Quantité</th>
+                            <th class="border px-2 py-1">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="produitsTable">
+                        <!-- Produits ajoutés ici -->
+                    </tbody>
+                </table>
+            </div>
+
+            <script>
+                let produits = [];
+
+                function ajouterProduit() {
+                    const nom = document.getElementById('produitNom').value.trim();
+                    const poids = parseFloat(document.getElementById('produitPoids').value);
+                    const quantite = parseInt(document.getElementById('produitQuantite').value);
+
+                    if (!nom || isNaN(poids) || isNaN(quantite)) {
+                        alert('Veuillez remplir tous les champs du produit.');
+                        return;
+                    }
+
+                    produits.push({
+                        nom,
+                        poids,
+                        quantite
+                    });
+                    afficherProduits();
+
+                    // Réinitialiser les champs
+                    document.getElementById('produitNom').value = '';
+                    document.getElementById('produitPoids').value = '';
+                    document.getElementById('produitQuantite').value = '';
+                }
+
+                function afficherProduits() {
+                    const table = document.getElementById('produitsTable');
+                    table.innerHTML = produits.map((p, i) => `
+            <tr>
+                <td class="border px-2 py-1">${p.nom}</td>
+                <td class="border px-2 py-1">${p.poids}</td>
+                <td class="border px-2 py-1">${p.quantite}</td>
+                <td class="border px-2 py-1 text-center">
+                    <button type="button" class="text-red-500 hover:underline" onclick="supprimerProduit(${i})">Supprimer</button>
+                </td>
+            </tr>
+        `).join('');
+                }
+
+                function supprimerProduit(index) {
+                    produits.splice(index, 1);
+                    afficherProduits();
+                }
+
+                function handleCreateCargaison(e) {
+                    e.preventDefault();
+                    // Pour le moment on affiche juste dans la console
+                    console.log("Cargaison créée avec produits :", produits);
+                    alert("Cargaison enregistrée avec " + produits.length + " produits.");
+                }
+            </script>
+
+
+            <!-- Remarques -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Remarques</label>
+                <textarea id="remarques" rows="3"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Notes ou détails supplémentaires"></textarea>
+            </div>
+
+            <!-- Boutons -->
             <div class="flex justify-end space-x-3 pt-4">
                 <button type="button" onclick="hideCreateModal()" class="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors">
                     Annuler
@@ -327,109 +489,110 @@ $bodyClass = "bg-gray-50";
                 </button>
             </div>
         </form>
+
     </div>
 </div>
 
 <script>
-let sidebarOpen = false;
+    let sidebarOpen = false;
 
-// Navigation entre les sections
-function showSection(section) {
-    // Masquer toutes les sections
-    const sections = document.querySelectorAll('.section');
-    sections.forEach(s => s.classList.add('hidden'));
-    
-    // Afficher la section demandée
-    document.getElementById(section + 'Section').classList.remove('hidden');
-    
-    // Mettre à jour la navigation
-    const navItems = document.querySelectorAll('.nav-item');
-    navItems.forEach(item => {
-        item.classList.remove('active', 'bg-blue-50', 'text-blue-600');
-        item.classList.add('text-gray-700');
+    // Navigation entre les sections
+    function showSection(section) {
+        // Masquer toutes les sections
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(s => s.classList.add('hidden'));
+
+        // Afficher la section demandée
+        document.getElementById(section + 'Section').classList.remove('hidden');
+
+        // Mettre à jour la navigation
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.classList.remove('active', 'bg-blue-50', 'text-blue-600');
+            item.classList.add('text-gray-700');
+        });
+
+        // Activer l'élément cliqué
+        event.target.classList.add('active', 'bg-blue-50', 'text-blue-600');
+        event.target.classList.remove('text-gray-700');
+
+        // Mettre à jour le titre
+        const titles = {
+            'overview': 'Vue d\'ensemble',
+            'cargaisons': 'Gestion des cargaisons',
+            'clients': 'Gestion des clients',
+            'colis': 'Gestion des colis',
+            'recherche': 'Recherche avancée'
+        };
+        document.getElementById('pageTitle').textContent = titles[section];
+    }
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebarOpen = !sidebarOpen;
+
+        if (sidebarOpen) {
+            sidebar.classList.remove('-translate-x-full');
+        } else {
+            sidebar.classList.add('-translate-x-full');
+        }
+    }
+
+    function showCreateModal() {
+        document.getElementById('createModal').classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+
+    function hideCreateModal() {
+        document.getElementById('createModal').classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
+
+    function handleCreateCargaison(event) {
+        event.preventDefault();
+
+        // Simulation de création
+        showNotification('Cargaison créée avec succès!', 'success');
+        hideCreateModal();
+    }
+
+    function logout() {
+        if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+            showNotification('Déconnexion en cours...', 'info');
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1500);
+        }
+    }
+
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        const bgColor = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
+
+        notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300`;
+        notification.textContent = message;
+
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.classList.remove('translate-x-full');
+        }, 100);
+
+        setTimeout(() => {
+            notification.classList.add('translate-x-full');
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 300);
+        }, 3000);
+    }
+
+    // Fermer la sidebar mobile en cliquant à l'extérieur
+    document.addEventListener('click', function(e) {
+        const sidebar = document.getElementById('sidebar');
+        const toggleButton = e.target.closest('[onclick="toggleSidebar()"]');
+
+        if (sidebarOpen && !sidebar.contains(e.target) && !toggleButton) {
+            toggleSidebar();
+        }
     });
-    
-    // Activer l'élément cliqué
-    event.target.classList.add('active', 'bg-blue-50', 'text-blue-600');
-    event.target.classList.remove('text-gray-700');
-    
-    // Mettre à jour le titre
-    const titles = {
-        'overview': 'Vue d\'ensemble',
-        'cargaisons': 'Gestion des cargaisons',
-        'clients': 'Gestion des clients',
-        'colis': 'Gestion des colis',
-        'recherche': 'Recherche avancée'
-    };
-    document.getElementById('pageTitle').textContent = titles[section];
-}
-
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    sidebarOpen = !sidebarOpen;
-    
-    if (sidebarOpen) {
-        sidebar.classList.remove('-translate-x-full');
-    } else {
-        sidebar.classList.add('-translate-x-full');
-    }
-}
-
-function showCreateModal() {
-    document.getElementById('createModal').classList.remove('hidden');
-    document.body.classList.add('overflow-hidden');
-}
-
-function hideCreateModal() {
-    document.getElementById('createModal').classList.add('hidden');
-    document.body.classList.remove('overflow-hidden');
-}
-
-function handleCreateCargaison(event) {
-    event.preventDefault();
-    
-    // Simulation de création
-    showNotification('Cargaison créée avec succès!', 'success');
-    hideCreateModal();
-}
-
-function logout() {
-    if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-        showNotification('Déconnexion en cours...', 'info');
-        setTimeout(() => {
-            window.location.href = '/';
-        }, 1500);
-    }
-}
-
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    const bgColor = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
-    
-    notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300`;
-    notification.textContent = message;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.classList.remove('translate-x-full');
-    }, 100);
-    
-    setTimeout(() => {
-        notification.classList.add('translate-x-full');
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
-    }, 3000);
-}
-
-// Fermer la sidebar mobile en cliquant à l'extérieur
-document.addEventListener('click', function(e) {
-    const sidebar = document.getElementById('sidebar');
-    const toggleButton = e.target.closest('[onclick="toggleSidebar()"]');
-    
-    if (sidebarOpen && !sidebar.contains(e.target) && !toggleButton) {
-        toggleSidebar();
-    }
-});
 </script>
